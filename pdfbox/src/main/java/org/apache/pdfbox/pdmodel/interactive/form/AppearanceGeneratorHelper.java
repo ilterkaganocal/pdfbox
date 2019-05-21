@@ -770,8 +770,15 @@ class AppearanceGeneratorHelper
                 }
 
                 float heightBasedFontSize = contentRect.getHeight() / height * yScalingFactor;
-                
-                return Math.min(heightBasedFontSize, widthBasedFontSize);
+
+                // jotform edit: we don't want small texts to get stretched to much to fit the full height
+                // put an upper limit to that
+                if(heightBasedFontSize > 12) {
+                    heightBasedFontSize = 12;
+                }
+
+                float finalFontsize = Math.min(heightBasedFontSize, widthBasedFontSize);
+                return finalFontsize < 10 ? 10 : finalFontsize;
             }
         }
         return fontSize;
