@@ -31,7 +31,7 @@
         <relativePath />
     </parent>
 
-    <groupId>org.apache.pdfbox</groupId>
+    <groupId>com.jotform.pdfbox</groupId>
     <artifactId>pdfbox-parent</artifactId>
     <version>2.0.14</version>
     <packaging>pom</packaging>
