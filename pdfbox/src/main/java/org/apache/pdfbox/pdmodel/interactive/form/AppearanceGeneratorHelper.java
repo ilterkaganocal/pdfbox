@@ -433,7 +433,25 @@ class AppearanceGeneratorHelper
         
         if (fontSize == 0)
         {
-            fontSize = calculateFontSize(font, contentRect);            
+            fontSize = calculateFontSize(font, contentRect);
+            if (field instanceof PDTextField) {
+                boolean shouldSetFieldFontsize = false;
+                if (fontSize > 12) {
+                    fontSize = 12;
+                } else if (fontSize < 9) {
+                    fontSize = 9;
+                    shouldSetFieldFontsize = true;
+                }
+
+                if(shouldSetFieldFontsize) {
+                    PDTextField textField = (PDTextField) field;
+                    String da = textField.getDefaultAppearance();
+                    defaultAppearance.setFontSize(fontSize);
+                    da = da.replaceFirst(" 0 Tf", " " + fontSize + " Tf");
+                    textField.setDefaultAppearance(da);
+                    textField.setDoNotScroll(false);
+                }
+            }
         }
         
         // for a listbox generate the highlight rectangle for the selected
@@ -771,14 +789,7 @@ class AppearanceGeneratorHelper
 
                 float heightBasedFontSize = contentRect.getHeight() / height * yScalingFactor;
 
-                // jotform edit: we don't want small texts to get stretched to much to fit the full height
-                // put an upper limit to that
-                if(heightBasedFontSize > 12) {
-                    heightBasedFontSize = 12;
-                }
-
-                float finalFontsize = Math.min(heightBasedFontSize, widthBasedFontSize);
-                return finalFontsize < 10 ? 10 : finalFontsize;
+                return Math.min(heightBasedFontSize, widthBasedFontSize);
             }
         }
         return fontSize;
